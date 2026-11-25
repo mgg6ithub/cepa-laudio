@@ -61,19 +61,26 @@
     const build = () => {
       const o = offer.getBoundingClientRect();
       // posizioa diseinutik (offset*), ez animazioaren transformaziotik
-      const p = cards.map((c) => ({ x: c.offsetLeft + c.offsetWidth / 2, y: c.offsetTop + c.offsetHeight / 2, w: c.offsetWidth, h: c.offsetHeight }));
+      const measure = () => cards.map((c) => ({ x: c.offsetLeft + c.offsetWidth / 2, y: c.offsetTop + c.offsetHeight / 2, w: c.offsetWidth, h: c.offsetHeight }));
       const row = (a, b) => Math.abs(a.y - b.y) < 10;
+      let p = measure();
+      const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], p[p.length - 1]);
+      // alboetako tartea erabili: ezkerrean hasiera, eskuinean bira. Tarterik ez badago, barruan lekua egin
+      const vw = document.documentElement.clientWidth, sideL = o.left, sideR = vw - o.right;
+      let tailRoom = offer.hasAttribute("data-anim") && hEnd ? Math.max(0, 130 - sideR) : 0;
+      if (offer.style.paddingRight !== tailRoom + "px") { offer.style.paddingRight = tailRoom + "px"; p = measure(); }
+      if (tailRoom && !row(p[p.length - 2], p[p.length - 1])) { tailRoom = 0; offer.style.paddingRight = "0px"; p = measure(); }
+      const reachL = Math.max(28, Math.min(170, sideL - 24)), R = Math.max(70, Math.min(180, sideR + tailRoom - 30));
       const first = p[0], last = p[p.length - 1];
-      const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], last);
-      // Marrazki libreagoa: tarte bakoitzak bere kurbadura, ez simetrikoa
-      const bend = [[.32, .12], [-.10, -.30], [.22, .06], [-.18, -.05]];
+      // Marrazki librea: tarte bakoitzak bere kurbadura, nabarmena eta ez simetrikoa
+      const bend = [[.85, .3], [-.35, -.95], [.7, .2], [-.6, -.25]];
       enter = []; exit = [];
       let d;
       // hasiera: "Gurekin zer?" izenburuaren ezkerretik jaitsi, kurban, lehen txartelean sartzeko
       const h1 = $(".page-head h1"), x1 = first.x - first.w / 2;
       if (h1) {
-        const r = h1.getBoundingClientRect(), sx = Math.max(x1 - 34, r.left - o.left - 30, 6 - o.left), sy = r.top - o.top + r.height / 2, dy = first.y - sy;
-        d = `M${sx},${sy} C${sx - 4},${sy + dy * .5} ${x1 - 44},${first.y - 46} ${x1},${first.y}`;
+        const r = h1.getBoundingClientRect(), sx = Math.max(r.left - o.left - reachL * .35, 8 - o.left), sy = r.top - o.top + r.height / 2, dy = first.y - sy;
+        d = `M${sx},${sy} C${-reachL * 1.1},${sy + dy * .35} ${x1 - reachL * 1.1},${first.y - dy * .05} ${x1},${first.y}`;
       } else if (hStart) {
         d = `M${x1 - 48},${first.y - 22} C${x1 - 28},${first.y - 22} ${x1 - 16},${first.y} ${x1},${first.y}`;
       } else {
@@ -106,10 +113,10 @@
           // bukaeran bira bat gora, eta behera kurban, azpiko testura begira
           // bira handia gora, gero behera kurba zabalean, erdialdera begira
           const cx = (p[0].x + last.x) / 2;
-          d += ` C${x + 34},${y} ${x + 74},${y - 22} ${x + 74},${y - 68} C${x + 74},${y - 118} ${x + 8},${y - 122} ${x + 10},${y - 70}`;
-          d += ` C${x + 12},${y - 20} ${x + 84},${y + 14} ${x + 74},${b + 50}`;
+          d += ` C${x + R * .45},${y} ${x + R},${y - R * .15} ${x + R},${y - R * .62} C${x + R},${y - R * 1.15} ${x + R * .2},${y - R * 1.2} ${x + R * .26},${y - R * .58}`;
+          d += ` C${x + R * .32},${y - R * .05} ${x + R * 1.08},${y + R * .25} ${x + R * .95},${b + R * .45}`;
           e = { x: cx + 20, y: b + 196 }; c2 = { x: e.x + 70, y: e.y - 36 };
-          d += ` C${x + 64},${b + 150} ${c2.x + 90},${e.y - 20} ${c2.x},${c2.y} Q${e.x + 34},${e.y - 44} ${e.x},${e.y}`;
+          d += ` C${x + R * .85},${b + 175} ${c2.x + 110},${e.y - 18} ${c2.x},${c2.y} Q${e.x + 34},${e.y - 44} ${e.x},${e.y}`;
           c2 = { x: e.x + 34, y: e.y - 44 };
         } else { e = { x: x + 40, y: y - 8 }; c2 = { x: x + 24, y: e.y }; d += ` C${x + 16},${y} ${c2.x},${c2.y} ${e.x},${e.y}`; }
       } else {
@@ -143,7 +150,7 @@
     let t0 = 0;
     const tick = (t) => {
       const dt = Math.min(.05, (t - (t0 || t)) / 1000); t0 = t;
-      drawn += dt * (inside(drawn) ? 1800 : 260);
+      drawn += dt * (inside(drawn) ? 2600 : 480);
       if (drawn >= total) { drawn = total; done = true; }
       paint();
       if (!done) requestAnimationFrame(tick);
