@@ -12,16 +12,17 @@ ORRIAK = {  # fitxategia: (izenburua, deskribapena)
     "hezkuntza-eskaintza": ("Hezkuntza eskaintza", "DBH titulua, hizkuntzak, informatika eta gehiago, doan."),
     "albisteak": ("Albisteak", "CEPA Laudio HHIko albisteak eta irteerak."),
     "matrikula": ("Matrikula", "2026-2027 ikasturteko matrikula epeak eta dokumentazioa."),
-    "argazkiak": ("Argazkiak", "Irteeren, tailerren eta proiektuen argazkiak eta bideoak."),
+    "argazkiak": ("Argazkiak", "Irteeren, tailerren eta proiektuen argazkiak."),
+    "bideoak": ("Bideoak", "Ikasleek eta irakasleek egindako bideoak eta laburmetraiak."),
     "ohiko-galderak": ("Ohiko galderak", "HHI zentroei buruzko ohiko galderak."),
     "harremana": ("Harremana", "Ikasguneen helbideak, telefonoak eta ordutegiak."),
     "estekak": ("Estekak", "Eskualdeko udal, komunikabide eta ikastetxeen estekak."),
     "elkarrekintzak": ("Elkarrekintzak", "Elkarlanean ari garen taldeak."),
 }
-MENUA = ["index", "hezkuntza-eskaintza", "albisteak", "matrikula", "argazkiak"]
+MENUA = ["index", "hezkuntza-eskaintza", "albisteak", "matrikula", "argazkiak", "bideoak"]
 BESTE = ["ohiko-galderak", "harremana", "estekak", "elkarrekintzak"]
 CAS = {"index": "index.php", "hezkuntza-eskaintza": "content.php?id=2", "albisteak": "news.php", "matrikula": "content.php?id=4",
-       "argazkiak": "fotos.php", "ohiko-galderak": "faq.php", "harremana": "content.php?id=7", "estekak": "content.php?id=8",
+       "argazkiak": "fotos.php", "bideoak": "fotos.php", "ohiko-galderak": "faq.php", "harremana": "content.php?id=7", "estekak": "content.php?id=8",
        "elkarrekintzak": "content.php?id=18"}
 
 # Albisteak (news.php): id, data, izenburua, irudia, laburpena, estekak
@@ -108,7 +109,7 @@ def nav_html(cur):
 def orria(name, body):
     title, desc = ORRIAK[name]
     full = "CEPA Laudio-Amurrio HHI" if name == "index" else f"{title} · CEPA Laudio-Amurrio HHI"
-    gal = '<script src="assets/js/galeria-datuak.js" defer></script>' if name == "argazkiak" else ""
+    gal = '<script src="assets/js/galeria-datuak.js" defer></script>' if name in ("argazkiak", "bideoak") else ""
     return f'''<!doctype html>
 <html lang="eu">
 <head>

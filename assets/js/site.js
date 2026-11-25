@@ -80,37 +80,37 @@
   const BASE = window.FOTO_BASE;
   const norm = (el) => typeof el === "string"
     ? { mota: "img", src: BASE + el, thumb: BASE + el }
-    : { mota: el.video ? "video" : "embed", src: el.video || el.embed, thumb: el.poster || "", izena: el.izena || "Bideoa" };
+    : { mota: el.video ? "video" : "embed", src: el.video || el.embed, thumb: el.poster || "", izena: el.izena || "Bideoa", data: el.data || "" };
   const albums = window.ALBUMAK.map((a) => ({ ...a, items: a.elementuak.map(norm) }));
   const params = new URLSearchParams(location.search);
+  if (params.get("ikusi") === "bideoak") { location.replace("bideoak.html"); return; }
   const albumId = Number(params.get("album"));
-  const tab = params.get("ikusi");
+  const ikusi = root.dataset.ikusi;
 
   const tile = (it, i) => it.mota === "img"
-    ? `<button class="tile" data-i="${i}" aria-label="Ireki argazkia ${i + 1}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"></button>`
-    : `<button class="tile video" data-i="${i}" aria-label="Ikusi bideoa: ${esc(it.izena)}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"><span class="play"><span></span></span></button>`;
-
-  const tabs = (cur) => `<nav class="tabs" aria-label="Galeria">
-    <a href="argazkiak.html" ${cur === "albumak" ? 'aria-current="page"' : ""}>Albumak</a>
-    <a href="argazkiak.html?ikusi=bideoak" ${cur === "bideoak" ? 'aria-current="page"' : ""}>Bideoak</a></nav>`;
+    ? `<button class="tile" style="--d:${i}" data-i="${i}" aria-label="Ireki argazkia ${i + 1}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"></button>`
+    : `<button class="tile video" style="--d:${i}" data-i="${i}" aria-label="Ikusi bideoa: ${esc(it.izena)}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"><span class="play"><span></span></span></button>`;
 
   let list = [];
   const album = albums.find((a) => a.id === albumId);
-  if (album) {
+  if (ikusi === "bideoak") {
+    list = [
+      ...(window.BIDEOAK || []).map(norm).map((it) => ({ ...it, album: it.data })),
+      ...albums.flatMap((a) => a.items.filter((it) => it.mota !== "img").map((it) => ({ ...it, album: a.izena }))),
+    ];
+    root.innerHTML = list.length
+      ? `<div class="video-row">${list.map((it, i) => `<article class="card video-card" style="--d:${i}">${tile(it, i)}<div class="body"><h3>${esc(it.izena)}</h3><span class="muted">${esc(it.album)}</span></div></article>`).join("")}</div>`
+      : `<p class="muted">Oraindik ez dago bideorik.</p>`;
+  } else if (album) {
     document.title = `${album.izena} · Argazkiak · CEPA Laudio HHI`;
     $(".page-head h1").textContent = album.izena;
     $(".page-head p:not(.eyebrow)").textContent = `${album.items.length} elementu`;
     list = album.items.map((it) => ({ ...it, album: album.izena }));
     root.innerHTML = `<a class="back" href="argazkiak.html">← Album guztiak</a><div class="masonry">${list.map(tile).join("")}</div>`;
-  } else if (tab === "bideoak") {
-    list = albums.flatMap((a) => a.items.filter((it) => it.mota !== "img").map((it) => ({ ...it, album: a.izena })));
-    root.innerHTML = tabs("bideoak") + (list.length
-      ? `<div class="video-row">${list.map((it, i) => `<article class="card video-card">${tile(it, i)}<div class="body"><h3>${esc(it.izena)}</h3><span class="muted">${esc(it.album)}</span></div></article>`).join("")}</div>`
-      : `<p class="muted">Oraindik ez dago bideorik.</p>`);
   } else {
-    root.innerHTML = tabs("albumak") + `<div class="albums">${albums.map((a) => {
+    root.innerHTML = `<div class="albums">${albums.map((a, i) => {
       const v = a.items.filter((it) => it.mota !== "img").length;
-      return `<a class="album" href="?album=${a.id}"><div class="stack">${v ? `<span class="badge">▶ ${v} bideo</span>` : ""}<img src="${BASE + a.azala}" alt="" loading="lazy" decoding="async"></div>
+      return `<a class="album" style="--d:${i}" href="?album=${a.id}"><div class="stack">${v ? `<span class="badge">▶ ${v} bideo</span>` : ""}<img src="${BASE + a.azala}" alt="" loading="lazy" decoding="async"></div>
         <h3>${esc(a.izena)}</h3><span class="count">${a.items.length - v} argazki</span></a>`;
     }).join("")}</div>`;
   }
