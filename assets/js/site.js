@@ -45,7 +45,7 @@
   /* "Zer ikas dezakezu": marra etena marraz marra marrazten da; txartela agertzen da marra iritsi aurretik,
      marra txartelaren atzetik pasatzen da eta beste aldetik ateratzen da, gezi batekin amaitu arte */
   const NS = "http://www.w3.org/2000/svg", DASH = 10, GAP = 7, P = DASH + GAP;
-  $$(".offer").forEach((offer, k) => {
+  $$(".offer[data-anim]").forEach((offer, k) => {
     const cards = $$(":scope > .card", offer);
     if (cards.length < 2) return;
     offer.insertAdjacentHTML("afterbegin", `<svg class="offer-path" aria-hidden="true"><defs><mask id="pen${k}" maskUnits="userSpaceOnUse"><path class="pen"/></mask></defs><path class="dash" mask="url(#pen${k})"/><polygon class="head"/></svg>`);
