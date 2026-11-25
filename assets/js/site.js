@@ -52,7 +52,10 @@
     const svg = offer.firstElementChild, mask = $("mask", svg), pen = $(".pen", svg), dash = $(".dash", svg), head = $(".head", svg);
     const probe = document.createElementNS(NS, "path");
     svg.append(probe); probe.setAttribute("fill", "none");
-    let total = 0, enter = [], exit = [], drawn = 0, started = false, done = false;
+    // Animazioa Hezkuntza eskaintza orrian bakarrik (data-anim); bestela marra osorik, mugimendurik gabe
+    const anim = offer.hasAttribute("data-anim") && !reduce;
+    if (!anim) offer.classList.add("static");
+    let total = 0, enter = [], exit = [], drawn = 0, started = false, done = !anim;
     const lenOf = (d) => { probe.setAttribute("d", d); return probe.getTotalLength(); };
     const build = () => {
       const o = offer.getBoundingClientRect();
@@ -89,14 +92,32 @@
         }
         enter.push(lenOf(d));
       }
-      let e;
-      if (hEnd) { const x = last.x + last.w / 2; d += ` L${x},${last.y}`; exit.push(lenOf(d)); e = { x: x + 40, y: last.y - 8 }; d += ` C${x + 16},${last.y} ${x + 24},${e.y} ${e.x},${e.y}`; }
-      else { const y = last.y + last.h / 2; d += ` L${last.x},${y}`; exit.push(lenOf(d)); e = { x: last.x + 10, y: y + 64 }; d += ` C${last.x},${y + 24} ${e.x},${y + 40} ${e.x},${e.y}`; }
+      let e, c2;
+      const tail = offer.hasAttribute("data-anim");
+      if (hEnd) {
+        const x = last.x + last.w / 2, y = last.y, b = last.y + last.h / 2;
+        d += ` L${x},${y}`; exit.push(lenOf(d));
+        if (tail) {
+          // bukaeran bira bat gora, eta behera kurban, azpiko testura begira
+          d += ` C${x + 22},${y} ${x + 44},${y - 8} ${x + 44},${y - 36} C${x + 44},${y - 64} ${x + 8},${y - 66} ${x + 8},${y - 38} C${x + 8},${y - 10} ${x + 46},${y + 10} ${x + 40},${b + 10}`;
+          c2 = { x: x + 18, y: b + 54 }; e = { x: x + 14, y: b + 78 };
+          d += ` C${x + 36},${b + 38} ${c2.x},${c2.y} ${e.x},${e.y}`;
+        } else { e = { x: x + 40, y: y - 8 }; c2 = { x: x + 24, y: e.y }; d += ` C${x + 16},${y} ${c2.x},${c2.y} ${e.x},${e.y}`; }
+      } else {
+        const x = last.x, y = last.y + last.h / 2;
+        d += ` L${x},${y}`; exit.push(lenOf(d));
+        if (tail) {
+          d += ` C${x},${y + 30} ${x + 42},${y + 42} ${x + 42},${y + 20} C${x + 42},${y} ${x + 8},${y + 4} ${x + 10},${y + 30}`;
+          c2 = { x: x + 6, y: y + 70 }; e = { x: x + 4, y: y + 94 };
+          d += ` C${x + 12},${y + 52} ${c2.x},${c2.y} ${e.x},${e.y}`;
+        } else { e = { x: x + 10, y: y + 64 }; c2 = { x: e.x, y: y + 40 }; d += ` C${x},${y + 24} ${c2.x},${c2.y} ${e.x},${e.y}`; }
+      }
+      offer.classList.toggle("tail-h", tail && hEnd); offer.classList.toggle("tail-v", tail && !hEnd);
       dash.setAttribute("d", d); pen.setAttribute("d", d);
       total = lenOf(d);
       ["x", "y"].forEach((a) => mask.setAttribute(a, -300));
       mask.setAttribute("width", o.width + 600); mask.setAttribute("height", o.height + 600);
-      const ang = Math.atan2(hEnd ? 0 : 1, hEnd ? 1 : 0);
+      const ang = Math.atan2(e.y - c2.y, e.x - c2.x);
       const pt = (dx, dy) => `${e.x + dx * Math.cos(ang) - dy * Math.sin(ang)},${e.y + dx * Math.sin(ang) + dy * Math.cos(ang)}`;
       head.setAttribute("points", [pt(6, 0), pt(-10, -7), pt(-10, 7)].join(" "));
       head.style.transformOrigin = `${e.x}px ${e.y}px`;
@@ -123,6 +144,7 @@
     new IntersectionObserver((es, ob) => {
       if (!es[0].isIntersecting || started) return;
       started = true; ob.disconnect();
+      if (!anim) return;
       if (reduce) { done = true; paint(); } else requestAnimationFrame(tick);
     }, { threshold: .35 }).observe(offer);
   });
