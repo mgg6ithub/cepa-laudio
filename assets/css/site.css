@@ -144,7 +144,10 @@ html.js .offer[data-anim] > .card:not(.on) { opacity: 0; }
 }
 @keyframes chip-in { from { opacity: 0; transform: translateY(-26px) scale(.6); } }
 .offer.static > .card, .offer.static .head.on { animation: none; }
-.offer.tail-h { padding-bottom: 230px; }
+.offer.tail-h { padding-bottom: 190px; }
+/* animazioa bukatzean marra osoa batera desagertzen da */
+.offer-path.gone { transform-origin: 50% 50%; animation: boom .35s cubic-bezier(.7, 0, .84, 0) forwards; }
+@keyframes boom { 40% { opacity: 1; transform: scale(1.02); } to { opacity: 0; transform: scale(1.06); filter: blur(3px); visibility: hidden; } }
 .offer.tail-v { padding-bottom: 190px; }
 @keyframes head-in { from { opacity: 0; transform: scale(.3); } }
 @keyframes card-in { from { opacity: 0; transform: translateY(32px) scale(.95); } }

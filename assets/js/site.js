@@ -115,9 +115,9 @@
           const cx = (p[0].x + last.x) / 2;
           d += ` C${x + R * .45},${y} ${x + R},${y - R * .15} ${x + R},${y - R * .62} C${x + R},${y - R * 1.15} ${x + R * .2},${y - R * 1.2} ${x + R * .26},${y - R * .58}`;
           d += ` C${x + R * .32},${y - R * .05} ${x + R * 1.08},${y + R * .25} ${x + R * .95},${b + R * .45}`;
-          e = { x: cx + 20, y: b + 196 }; c2 = { x: e.x + 70, y: e.y - 36 };
-          d += ` C${x + R * .85},${b + 175} ${c2.x + 110},${e.y - 18} ${c2.x},${c2.y} Q${e.x + 34},${e.y - 44} ${e.x},${e.y}`;
-          c2 = { x: e.x + 34, y: e.y - 44 };
+          e = { x: x - (x - cx) * .5, y: b + 150 }; c2 = { x: e.x + 60, y: e.y - 32 };
+          d += ` C${x + R * .85},${b + 130} ${c2.x + 90},${e.y - 16} ${c2.x},${c2.y} Q${e.x + 30},${e.y - 40} ${e.x},${e.y}`;
+          c2 = { x: e.x + 30, y: e.y - 40 };
         } else { e = { x: x + 40, y: y - 8 }; c2 = { x: x + 24, y: e.y }; d += ` C${x + 16},${y} ${c2.x},${c2.y} ${e.x},${e.y}`; }
       } else {
         const x = last.x, y = last.y + last.h / 2;
@@ -151,7 +151,7 @@
     const tick = (t) => {
       const dt = Math.min(.05, (t - (t0 || t)) / 1000); t0 = t;
       drawn += dt * (inside(drawn) ? 2600 : 480);
-      if (drawn >= total) { drawn = total; done = true; }
+      if (drawn >= total) { drawn = total; done = true; setTimeout(() => svg.classList.add("gone"), 700); }
       paint();
       if (!done) requestAnimationFrame(tick);
     };
