@@ -1,0 +1,120 @@
+FAIL 2a assets/css/site.css:136 purple-to-blue gradient on .news .thumb.placeholder | fix: One anchor hue; drop the gradient
+FAIL 7a assets/css/site.css:58 pure #fff: background: #fff (.brand img) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:136 pure #fff: color: #fff (.news .thumb.placeholder) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:201 pure #fff: color: #fff (.badge) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:222 pure #fff: color: #fff (.lightbox) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:229 pure #000: background: #000 (.lb-stage iframe) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:230 pure #fff: color: #fff (.lb-btn) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:237 pure #fff: border-color: #fff (.lb-strip button[aria-current="true"]) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:260 pure #fff: color: #fff (.footer-grid h3) | fix: Tint the base toward the anchor hue
+FAIL 7a assets/css/site.css:262 pure #fff: color: #fff (.footer-grid .brand) | fix: Tint the base toward the anchor hue
+FAIL 19 argazkiak.html:37 dash "–" in copy | fix: A comma, a colon, a full stop or parentheses; never a dash
+FAIL 19 index.html:69 dash "–" in copy | fix: A comma, a colon, a full stop or parentheses; never a dash
+FAIL 34 assets/css/site.css:1 no overflow-x: clip on html and body | fix: overflow-x: clip on both html and body
+FAIL 34 assets/css/site.css:222 width: 100vw on .lightbox (scrollbar overflow) | fix: width: 100% with container padding
+FAIL 48 assets/css/site.css:58 colour literal #fff outside tokens (background on .brand img) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:93 colour literal #1c2330 outside tokens (color on .pill-free span) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:136 colour literal #fff outside tokens (color on .news .thumb.placeholder) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:152 colour literal #1c2330 outside tokens (color on .centre .no-photo) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:201 colour literal rgb(0 0 0 / .65) outside tokens (background on .badge) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:201 colour literal #fff outside tokens (color on .badge) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:211 colour literal rgb(255 255 255 / .92) outside tokens (background on .play span) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:211 colour literal rgb(0 0 0 / .3) outside tokens (box-shadow on .play span) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:212 colour literal #1c2330 outside tokens (border-left on .play span::before) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:222 colour literal rgb(8 10 14 / .96) outside tokens (background on .lightbox) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:222 colour literal #fff outside tokens (color on .lightbox) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:223 colour literal rgb(8 10 14 / .96) outside tokens (background on .lightbox::backdrop) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:229 colour literal #000 outside tokens (background on .lb-stage iframe) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:230 colour literal rgb(255 255 255 / .12) outside tokens (background on .lb-btn) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:230 colour literal #fff outside tokens (color on .lb-btn) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:231 colour literal rgb(255 255 255 / .24) outside tokens (background on .lb-btn:hover) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:236 colour literal #222 outside tokens (background on .lb-strip button) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:237 colour literal #fff outside tokens (border-color on .lb-strip button[aria-current…) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:256 colour literal #c9ced8 outside tokens (color on .site-footer) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:257 colour literal #0a0d12 outside tokens (background on .site-footer) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:260 colour literal #fff outside tokens (color on .footer-grid h3) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:262 colour literal #fff outside tokens (color on .footer-grid .brand) | fix: Lift the value into the token block
+FAIL 48 assets/css/site.css:263 colour literal rgb(255 255 255 / .12) outside tokens (border-top on .copy) | fix: Lift the value into the token block
+FAIL 50 assets/css/site.css:142 bare 1.2fr track holds images (.news.featured) | fix: Use minmax(0, 1fr) for image tracks
+FAIL 50 assets/css/site.css:144 bare 1fr track holds images (.news.featured) | fix: Use minmax(0, 1fr) for image tracks
+FAIL 50 assets/css/site.css:259 bare 1.4fr track holds images (.footer-grid) | fix: Use minmax(0, 1fr) for image tracks
+FAIL 50 assets/css/site.css:264 bare 1fr track holds images (.footer-grid) | fix: Use minmax(0, 1fr) for image tracks
+FAIL 54 argazkiak.html:25 eyebrow "Galeria" before <h1> | fix: Cut it; the heading already says this (craft.md § 7 has twelve other openings)
+FAIL 54 index.html:42 eyebrow "Gurekin zer?" before <h2> | fix: Cut it; the heading already says this (craft.md § 7 has twelve other openings)
+FAIL 54 index.html:52 eyebrow "Albisteak" before <h2> | fix: Cut it; the heading already says this (craft.md § 7 has twelve other openings)
+FAIL 54 index.html:65 eyebrow "Zentroak" before <h2> | fix: Cut it; the heading already says this (craft.md § 7 has twelve other openings)
+FAIL 54 index.html:94 eyebrow "Agenda" before <h2> | fix: Cut it; the heading already says this (craft.md § 7 has twelve other openings)
+FAIL 63 index.html:31 arrow glued to the label "Matrikula 2026-2027 →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:42 arrow glued to the label "Eskaintza osoa →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:52 arrow glued to the label "Albiste guztiak →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:55 arrow glued to the label "Gehiago irakurri →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:58 arrow glued to the label "Gehiago irakurri →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:61 arrow glued to the label "Gehiago irakurri →" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 63 index.html:91 arrow glued to the label "›" | fix: A verb as the label; the link already says it goes somewhere
+FAIL 67 assets/css/site.css:52 .eyebrow: uppercase tracked 0.12em in a label role | fix: Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked
+FAIL 67 assets/css/site.css:156 .centre dt: uppercase tracked 0.06em in a label role | fix: Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked
+REFLEX 24b assets/css/site.css:49 padding: 8px 14px (off the 4px scale) on .skip | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:58 padding: 3px (off the 4px scale) on .brand img | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:69 padding: 6px (off the 4px scale) on .nav details ul | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:71 padding: 3px (off the 4px scale) on .lang | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:72 padding: 4px 10px (off the 4px scale) on .lang a | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:74 padding: 10px 16px (off the 4px scale) on .menu-btn | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:81 padding: 12px 14px (off the 4px scale) on .nav a, .nav summary | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:92 padding: 6px 14px 6px 8px (off the 4px scale) on .pill-free | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:93 padding: 2px 10px (off the 4px scale) on .pill-free span | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:102 padding: 14px 22px (off the 4px scale) on .btn | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:122 padding: 22px (off the 4px scale) on .offer .card | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:126 gap: 6px (off the 4px scale) on .chips | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:126 margin-top: 10px (off the 4px scale) on .chips | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:127 padding: 3px 12px (off the 4px scale) on .chips li | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:137 padding: 18px 20px 22px (off the 4px scale) on .news .body | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:137 gap: 6px (off the 4px scale) on .news .body | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:153 padding: 20px 22px 22px (off the 4px scale) on .centre .body | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:155 margin: 0 0 14px (off the 4px scale) on .centre dl | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:160 padding: 10px 16px (off the 4px scale) on .centre .actions a | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:164 gap: 14px (off the 4px scale) on .steps li | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:164 padding: 14px 16px (off the 4px scale) on .steps li | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:165 margin-top: 6px (off the 4px scale) on .steps li::before | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:166 padding: 14px 18px (off the 4px scale) on .callout | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:169 gap: 10px (off the 4px scale) on .faq | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:171 padding: 18px 28px 18px 0 (off the 4px scale) on .faq summary | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:175 padding-bottom: 18px (off the 4px scale) on .faq details > div | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:176 padding: 14px 18px (off the 4px scale) on .faq-search | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:176 margin-bottom: 18px (off the 4px scale) on .faq-search | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:180 padding: 20px 22px (off the 4px scale) on .link-groups .card | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:182 padding: 6px 0 (off the 4px scale) on .link-groups li a | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:187 padding: 8px 18px (off the 4px scale) on .tabs a | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:189 gap: 22px (off the 4px scale) on .albums | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:201 padding: 4px 10px (off the 4px scale) on .badge | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:203 column-gap: 14px (off the 4px scale) on .masonry | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:204 margin: 0 0 14px (off the 4px scale) on .tile | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:212 margin-left: 5px (off the 4px scale) on .play span::before | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:217 padding: 14px 18px 18px (off the 4px scale) on .video-card .body | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:219 gap: 6px (off the 4px scale) on .back | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:235 gap: 6px (off the 4px scale) on .lb-strip | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:235 padding: 10px 16px 14px (off the 4px scale) on .lb-strip | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:244 padding: 18px (off the 4px scale) on .cal | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:245 margin-bottom: 10px (off the 4px scale) on .cal-head | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:261 gap: 6px (off the 4px scale) on .footer-grid ul | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:263 padding-top: 18px (off the 4px scale) on .copy | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:263 gap: 10px (off the 4px scale) on .copy | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:267 padding: 18px 20px (off the 4px scale) on .cookies | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:267 gap: 14px (off the 4px scale) on .cookies | fix: Use the 4px spacing scale
+REFLEX 24b assets/css/site.css:270 padding: 10px 18px (off the 4px scale) on .cookies button | fix: Use the 4px spacing scale
+REFLEX 26b assets/css/site.css:1 no :active styling anywhere | fix: All eight states; guard: not a form control, no aria-disabled anywhere
+REFLEX 26b assets/css/site.css:1 no :disabled styling anywhere | fix: All eight states; guard: not a form control, no aria-disabled anywhere
+REFLEX 38iii assets/css/site.css:91 accented word inside a heading (.hero h1 em) | fix: Set the whole head one way: a line break, a second line at a second size, or the whole head in the accent. Guard: the theme names the coloured word as its signature and it appears once on the page, in the hero
+WARN 3 assets/css/site.css:166 side stripe border-left: 5px solid var(--sun) on .callout | fix: Hairline all round, none, or an accent square
+WARN 3 assets/css/site.css:212 side stripe border-left: 20px solid #1c2330 on .play span::before | fix: Hairline all round, none, or an accent square
+WARN 11 assets/css/site.css:135 image transforms on hover (.news:hover .thumb img) | fix: Imagery sits still; give the container the feedback
+WARN 11 assets/css/site.css:207 image transforms on hover (.tile:hover img) | fix: Imagery sits still; give the container the feedback
+WARN 29 assets/css/site.css:201 glass panel: backdrop-filter blur over a translucent black on .badge | fix: Solid or grained surface; elevation by lightness
+WARN 40 assets/css/site.css:256 1.38:1 < 4.5:1 on .site-footer | fix: Raise the contrast to threshold
+WARN 41 assets/css/site.css:113 dark surface (L 24%) on .card sets no text colour | fix: Swap text to paper in the same rule
+WARN 41 assets/css/site.css:257 dark surface (L 16%) on .site-footer sets no text colour | fix: Swap text to paper in the same rule
+WARN 58 index.html:29 hero paragraph runs 14 words | fix: One sentence, twelve words or fewer
+WARN F4 index.html:32 two filled buttons side by side in the hero: "Matrikula 2026-2027…" and "Hezkuntza eskaintza" | fix: One filled primary per screen; the second action is outlined or a typographic link
+WARN F6 assets/css/site.css:200 numeric selector .album .count at display size without tabular figures | fix: Add font-variant-numeric: tabular-nums
+WARN F7 assets/css/site.css:62 the pill radius on 8 non-control selectors (.nav a, .nav summary, .lang, .lang a) | fix: Pills are for controls; boxes and media take the card radius
+WARN F21 argazkiak.html:33 h1 is followed by h3 ("Laudio") | fix: Step heading levels one at a time; size a head with CSS, never with its level
+WARN F24 assets/css/site.css:69 a hairline border under a wide soft shadow on .nav details ul | fix: Commit to one: a defined edge, or elevation by shadow

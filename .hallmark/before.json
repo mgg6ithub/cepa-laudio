@@ -1,0 +1,145 @@
+{
+ "v": 1,
+ "at": "2026-11-25T16:21:55.191Z",
+ "scope": "page",
+ "summary": {
+  "fails": 55,
+  "reflex": 51,
+  "warns": 14
+ },
+ "files": {
+  "index.html": {
+   "handlers": [],
+   "links": [
+    "#edukia",
+    "albisteak.html",
+    "argazkiak.html",
+    "elkarrekintzak.html",
+    "estekak.html",
+    "harremana.html",
+    "hezkuntza-eskaintza.html",
+    "http://google.com/maps?ll=43.118772,-3.132135&amp;z=13&amp;t=h&amp;hl=es&amp;gl=ES&amp;mapclient=embed&amp;cid=7247471252668431534",
+    "https://epalaudioamurrio.eus/_wskcf/files/amurrio_euskera.jpg",
+    "https://epalaudioamurrio.eus/_wskcf/files/artzeniega_euskera.jpg",
+    "https://epalaudioamurrio.eus/_wskcf/files/laudio_euskera.jpg",
+    "https://epalaudioamurrio.eus/content.php?id=9",
+    "https://epalaudioamurrio.eus/index.php?set_idioma=1",
+    "https://epalaudioamurrio.eus/news.php?id=20",
+    "https://epalaudioamurrio.eus/news.php?id=22",
+    "https://epalaudioamurrio.eus/news.php?id=23",
+    "https://epalaudioamurrio.eus/news.php?id=24",
+    "https://maps.app.goo.gl/hYrzrDEDuMonvF1i8",
+    "https://www.google.com/maps/place/Centro+P%C3%BAblico+de+Educaci%C3%B3n+de+Personas+Adultas+de+Laudio%2FLlodio/@43.138959,-2.957696,14z/data=!4m6!3m5!1s0xd4e52c9435dfcbd:0x37180657be9cb809!8m2!3d43.1389586!4d-2.9576965",
+    "index.html",
+    "mailto:010035aa@hezkuntza.net",
+    "matrikula.html",
+    "ohiko-galderak.html",
+    "tel:+34674002617",
+    "tel:+34674002726",
+    "tel:+34945892620",
+    "tel:+34946721734"
+   ],
+   "fields": [],
+   "hooks": [],
+   "ids": [
+    "cal",
+    "edukia",
+    "nav"
+   ],
+   "scripts": [
+    "assets/js/site.js"
+   ]
+  },
+  "argazkiak.html": {
+   "handlers": [],
+   "links": [
+    "#edukia",
+    "albisteak.html",
+    "argazkiak.html",
+    "elkarrekintzak.html",
+    "estekak.html",
+    "harremana.html",
+    "hezkuntza-eskaintza.html",
+    "https://epalaudioamurrio.eus/content.php?id=9",
+    "https://epalaudioamurrio.eus/fotos.php?set_idioma=1",
+    "index.html",
+    "mailto:010035aa@hezkuntza.net",
+    "matrikula.html",
+    "ohiko-galderak.html",
+    "tel:+34945892620",
+    "tel:+34946721734"
+   ],
+   "fields": [],
+   "hooks": [],
+   "ids": [
+    "edukia",
+    "galeria",
+    "nav"
+   ],
+   "scripts": [
+    "assets/js/galeria-datuak.js",
+    "assets/js/site.js"
+   ]
+  }
+ },
+ "wiring": {
+  "handlers": [],
+  "links": [
+   "#edukia",
+   "albisteak.html",
+   "argazkiak.html",
+   "elkarrekintzak.html",
+   "estekak.html",
+   "harremana.html",
+   "hezkuntza-eskaintza.html",
+   "http://google.com/maps?ll=43.118772,-3.132135&amp;z=13&amp;t=h&amp;hl=es&amp;gl=ES&amp;mapclient=embed&amp;cid=7247471252668431534",
+   "https://epalaudioamurrio.eus/_wskcf/files/amurrio_euskera.jpg",
+   "https://epalaudioamurrio.eus/_wskcf/files/artzeniega_euskera.jpg",
+   "https://epalaudioamurrio.eus/_wskcf/files/laudio_euskera.jpg",
+   "https://epalaudioamurrio.eus/content.php?id=9",
+   "https://epalaudioamurrio.eus/fotos.php?set_idioma=1",
+   "https://epalaudioamurrio.eus/index.php?set_idioma=1",
+   "https://epalaudioamurrio.eus/news.php?id=20",
+   "https://epalaudioamurrio.eus/news.php?id=22",
+   "https://epalaudioamurrio.eus/news.php?id=23",
+   "https://epalaudioamurrio.eus/news.php?id=24",
+   "https://maps.app.goo.gl/hYrzrDEDuMonvF1i8",
+   "https://www.google.com/maps/place/Centro+P%C3%BAblico+de+Educaci%C3%B3n+de+Personas+Adultas+de+Laudio%2FLlodio/@43.138959,-2.957696,14z/data=!4m6!3m5!1s0xd4e52c9435dfcbd:0x37180657be9cb809!8m2!3d43.1389586!4d-2.9576965",
+   "index.html",
+   "mailto:010035aa@hezkuntza.net",
+   "matrikula.html",
+   "ohiko-galderak.html",
+   "tel:+34674002617",
+   "tel:+34674002726",
+   "tel:+34945892620",
+   "tel:+34946721734"
+  ],
+  "fields": [],
+  "hooks": [],
+  "ids": [
+   "cal",
+   "edukia",
+   "galeria",
+   "nav"
+  ]
+ },
+ "scripts": {
+  "index.html": {
+   "queried": [
+    ".tile",
+    "button"
+   ],
+   "hooked": [],
+   "hides": true
+  },
+  "argazkiak.html": {
+   "queried": [
+    ".tile",
+    "button"
+   ],
+   "hooked": [],
+   "hides": true
+  }
+ },
+ "pages": {}
+}

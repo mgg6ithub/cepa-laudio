@@ -122,6 +122,7 @@ def orria(name, body):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
+<script>try {{ if (localStorage.getItem("modua") === "dark") document.documentElement.dataset.mode = "dark"; }} catch (e) {{}}</script>
 {gal}<script src="assets/js/site.js" defer></script>
 </head>
 <body>
@@ -130,6 +131,7 @@ def orria(name, body):
   <a class="brand" href="index.html"><img src="assets/img/logo.jpg" alt="" width="44" height="44"><span><b>CEPA Laudio-Amurrio HHI</b><small>Helduentzako ikastetxe publikoa</small></span></a>
   <nav class="nav" id="nav" aria-label="Nagusia"><ul>{nav_html(name)}</ul></nav>
   <div class="lang" aria-label="Hizkuntza"><a href="{name}.html" aria-current="true" lang="eu">eus</a><a href="{LIVE}{CAS[name]}{"&" if "?" in CAS[name] else "?"}set_idioma=1" lang="es">cas</a></div>
+  <button class="mode-btn" type="button" aria-pressed="false" aria-label="Modu iluna"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
   <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menua</button>
 </div></header>
 <main id="edukia">

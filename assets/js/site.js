@@ -15,6 +15,20 @@
     $$(".nav details[open]").forEach((d) => { if (!d.contains(e.target)) d.open = false; });
   });
 
+  /* Modu argia / iluna (argia lehenetsita) */
+  const html = document.documentElement, mb = $(".mode-btn");
+  const syncMode = () => {
+    const dark = html.dataset.mode === "dark";
+    mb?.setAttribute("aria-pressed", dark);
+    mb?.setAttribute("aria-label", dark ? "Modu argia" : "Modu iluna");
+  };
+  mb?.addEventListener("click", () => {
+    if (html.dataset.mode === "dark") delete html.dataset.mode; else html.dataset.mode = "dark";
+    try { localStorage.setItem("modua", html.dataset.mode || "light"); } catch (e) {}
+    syncMode();
+  });
+  syncMode();
+
   /* Cookie-oharra (egungo cookie bera: cookies_surestao) */
   const ck = $(".cookies");
   if (ck && !document.cookie.includes("cookies_surestao=")) ck.classList.add("show");

@@ -21,13 +21,11 @@
   --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
+[data-mode="dark"] {
     --bg: #11151c; --surface: #191f29; --surface-2: #212937; --ink: #eef0f4; --ink-2: #aab2c0;
     --line: #2c3544; --brand: #3fb7c1; --brand-ink: #0b1218; --brand-soft: #16343a;
     --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .25);
     color-scheme: dark;
-  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -254,7 +252,11 @@ p { margin: 0 0 1em; text-wrap: pretty; }
 
 /* ---------- Footer ---------- */
 .site-footer { margin-top: 64px; background: var(--ink); color: #c9ced8; padding: 48px 0 28px; }
-@media (prefers-color-scheme: dark) { .site-footer { background: #0a0d12; } }
+[data-mode="dark"] .site-footer { background: #0a0d12; }
+.mode-btn { display: grid; place-items: center; width: 40px; height: 40px; background: var(--surface-2); color: var(--ink); border: 0; border-radius: 999px; cursor: pointer; }
+.mode-btn svg { width: 20px; height: 20px; }
+.mode-btn .sun, [data-mode="dark"] .mode-btn .moon { display: none; }
+[data-mode="dark"] .mode-btn .sun { display: block; }
 .site-footer a { color: inherit; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 28px; }
 .footer-grid h3 { color: #fff; font-size: 1rem; }
