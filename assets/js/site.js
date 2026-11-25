@@ -67,20 +67,21 @@
       const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], p[p.length - 1]);
       // alboetako tartea erabili: ezkerrean hasiera, eskuinean bira. Tarterik ez badago, barruan lekua egin
       const vw = document.documentElement.clientWidth, sideL = o.left, sideR = vw - o.right;
-      let tailRoom = offer.hasAttribute("data-anim") && hEnd ? Math.max(0, 130 - sideR) : 0;
+      let tailRoom = offer.hasAttribute("data-anim") && hEnd ? Math.max(0, 110 - sideR) : 0;
       if (offer.style.paddingRight !== tailRoom + "px") { offer.style.paddingRight = tailRoom + "px"; p = measure(); }
       if (tailRoom && !row(p[p.length - 2], p[p.length - 1])) { tailRoom = 0; offer.style.paddingRight = "0px"; p = measure(); }
-      const reachL = Math.max(28, Math.min(170, sideL - 24)), R = Math.max(70, Math.min(180, sideR + tailRoom - 30));
+      const reachL = Math.max(28, Math.min(170, sideL - 24)), R = Math.max(56, Math.min(92, sideR + tailRoom - 30));
       const first = p[0], last = p[p.length - 1];
       // Marrazki librea: tarte bakoitzak bere kurbadura, nabarmena eta ez simetrikoa
-      const bend = [[.85, .3], [-.35, -.95], [.7, .2], [-.6, -.25]];
+      // [non dagoen gailurra (0-1), altuera]: tangente leunak, punta gabe
+      const bend = [[.42, .36], [.58, -.4], [.47, .3], [.55, -.34]];
       enter = []; exit = [];
       let d;
       // hasiera: "Gurekin zer?" izenburuaren ezkerretik jaitsi, kurban, lehen txartelean sartzeko
       const h1 = $(".page-head h1"), x1 = first.x - first.w / 2;
       if (h1) {
         const r = h1.getBoundingClientRect(), sx = Math.max(r.left - o.left - reachL * .35, 8 - o.left), sy = r.top - o.top + r.height / 2, dy = first.y - sy;
-        d = `M${sx},${sy} C${-reachL * 1.1},${sy + dy * .35} ${x1 - reachL * 1.1},${first.y - dy * .05} ${x1},${first.y}`;
+        d = `M${sx},${sy} C${-reachL * 1.1},${sy + dy * .35} ${x1 - reachL * 1.1},${first.y} ${x1},${first.y}`;
       } else if (hStart) {
         d = `M${x1 - 48},${first.y - 22} C${x1 - 28},${first.y - 22} ${x1 - 16},${first.y} ${x1},${first.y}`;
       } else {
@@ -92,12 +93,14 @@
         const a = p[i - 1], b = p[i], [c1, c2] = bend[(i - 1) % bend.length];
         if (row(a, b)) {
           const x0 = a.x + a.w / 2, x1 = b.x - b.w / 2, g = x1 - x0;
+          const mx = x0 + g * c1, my = a.y + g * c2, k = g * .32;
           d += ` L${x0},${a.y}`; exit.push(lenOf(d));
-          d += ` C${x0 + g * .3},${a.y + g * c1} ${x1 - g * .4},${b.y + g * c2} ${x1},${b.y}`;
+          d += ` C${x0 + k},${a.y} ${mx - k},${my} ${mx},${my} C${mx + k},${my} ${x1 - k},${b.y} ${x1},${b.y}`;
         } else if (Math.abs(a.x - b.x) < 10) {
           const y0 = a.y + a.h / 2, y1 = b.y - b.h / 2, g = y1 - y0;
+          const my = y0 + g * c1, mx = a.x + g * c2 * .8, k = g * .22;
           d += ` L${a.x},${y0}`; exit.push(lenOf(d));
-          d += ` C${a.x + g * c1},${y0 + g * .3} ${b.x + g * c2},${y1 - g * .4} ${b.x},${y1}`;
+          d += ` C${a.x},${y0 + k} ${mx},${my - k} ${mx},${my} C${mx},${my + k} ${b.x},${y1 - k} ${b.x},${y1}`;
         } else {
           d += ` L${a.x},${a.y}`; exit.push(lenOf(d));
           d += ` C${a.x},${a.y + (b.y - a.y) * .6} ${b.x},${b.y - (b.y - a.y) * .6} ${b.x},${b.y}`;
@@ -112,12 +115,12 @@
         if (tail) {
           // bukaeran bira bat gora, eta behera kurban, azpiko testura begira
           // bira handia gora, gero behera kurba zabalean, erdialdera begira
-          const cx = (p[0].x + last.x) / 2;
           d += ` C${x + R * .45},${y} ${x + R},${y - R * .15} ${x + R},${y - R * .62} C${x + R},${y - R * 1.15} ${x + R * .2},${y - R * 1.2} ${x + R * .26},${y - R * .58}`;
-          d += ` C${x + R * .32},${y - R * .05} ${x + R * 1.08},${y + R * .25} ${x + R * .95},${b + R * .45}`;
-          e = { x: x - (x - cx) * .5, y: b + 150 }; c2 = { x: e.x + 60, y: e.y - 32 };
-          d += ` C${x + R * .85},${b + 130} ${c2.x + 90},${e.y - 16} ${c2.x},${c2.y} Q${e.x + 30},${e.y - 40} ${e.x},${e.y}`;
-          c2 = { x: e.x + 30, y: e.y - 40 };
+          // biratik pixka bat irten eta behera-ezkerrera seinalatu, azpiko testura
+          const yb = b + R * .3;
+          d += ` C${x + R * .32},${y - R * .05} ${x + R * 1.05},${y + R * .2} ${x + R * .95},${yb}`;
+          e = { x: x + R * .2, y: yb + 52 }; c2 = { x: x + R * .5, y: e.y - 24 };
+          d += ` C${x + R * .9},${yb + 22} ${c2.x},${c2.y} ${e.x},${e.y}`;
         } else { e = { x: x + 40, y: y - 8 }; c2 = { x: x + 24, y: e.y }; d += ` C${x + 16},${y} ${c2.x},${c2.y} ${e.x},${e.y}`; }
       } else {
         const x = last.x, y = last.y + last.h / 2;
