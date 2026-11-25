@@ -42,51 +42,89 @@
     io.observe(el);
   });
 
-  /* "Zer ikas dezakezu": marra etena txartel batetik bestera, gezi batekin amaitua */
-  const NS = "http://www.w3.org/2000/svg";
+  /* "Zer ikas dezakezu": marra etena marraz marra marrazten da; txartela agertzen da marra iritsi aurretik,
+     marra txartelaren atzetik pasatzen da eta beste aldetik ateratzen da, gezi batekin amaitu arte */
+  const NS = "http://www.w3.org/2000/svg", DASH = 10, GAP = 7, P = DASH + GAP;
   $$(".offer").forEach((offer, k) => {
     const cards = $$(":scope > .card", offer);
     if (cards.length < 2) return;
-    cards.forEach((c, i) => c.style.setProperty("--i", i));
-    offer.insertAdjacentHTML("afterbegin", `<svg class="offer-path" aria-hidden="true"><defs><mask id="pen${k}" maskUnits="userSpaceOnUse"><path class="pen" pathLength="1"/></mask></defs><path class="dash" mask="url(#pen${k})"/><polygon class="head"/></svg>`);
-    const svg = offer.firstElementChild, mask = $("mask", svg);
-    const draw = () => {
+    offer.insertAdjacentHTML("afterbegin", `<svg class="offer-path" aria-hidden="true"><defs><mask id="pen${k}" maskUnits="userSpaceOnUse"><path class="pen"/></mask></defs><path class="dash" mask="url(#pen${k})"/><polygon class="head"/></svg>`);
+    const svg = offer.firstElementChild, mask = $("mask", svg), pen = $(".pen", svg), dash = $(".dash", svg), head = $(".head", svg);
+    const probe = document.createElementNS(NS, "path");
+    svg.append(probe); probe.setAttribute("fill", "none");
+    let total = 0, enter = [], exit = [], drawn = 0, started = false, done = false;
+    const lenOf = (d) => { probe.setAttribute("d", d); return probe.getTotalLength(); };
+    const build = () => {
       const o = offer.getBoundingClientRect();
-      const p = cards.map((c) => { const r = c.getBoundingClientRect(); return { x: r.left - o.left + r.width / 2, y: r.top - o.top + r.height / 2, w: r.width, h: r.height }; });
+      // posizioa diseinutik (offset*), ez animazioaren transformaziotik
+      const p = cards.map((c) => ({ x: c.offsetLeft + c.offsetWidth / 2, y: c.offsetTop + c.offsetHeight / 2, w: c.offsetWidth, h: c.offsetHeight }));
       const row = (a, b) => Math.abs(a.y - b.y) < 10;
       const first = p[0], last = p[p.length - 1];
       const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], last);
-      const s = hStart ? { x: first.x - first.w / 2 - 36, y: first.y } : { x: first.x, y: first.y - first.h / 2 - 48 };
-      const e = hEnd ? { x: last.x + last.w / 2 + 40, y: last.y } : { x: last.x, y: last.y + last.h / 2 + 52 };
-      // Txarteletan zuzen (ezkutuan), tarteetan arku leun bat, txandaka gora eta behera
-      let d = hStart
-        ? `M${s.x},${s.y - 40} C${s.x + 24},${s.y - 40} ${first.x - first.w / 2 - 14},${first.y} ${first.x - first.w / 2},${first.y} L${first.x},${first.y}`
-        : `M${s.x - 40},${s.y} C${s.x - 40},${s.y + 24} ${first.x},${first.y - first.h / 2 - 14} ${first.x},${first.y - first.h / 2} L${first.x},${first.y}`;
+      // Marrazki libreagoa: tarte bakoitzak bere kurbadura, ez simetrikoa
+      const bend = [[.32, .12], [-.10, -.30], [.22, .06], [-.18, -.05]];
+      enter = []; exit = [];
+      let d;
+      if (hStart) {
+        const x = first.x - first.w / 2;
+        d = `M${x - 48},${first.y - 22} C${x - 28},${first.y - 22} ${x - 16},${first.y} ${x},${first.y}`;
+      } else {
+        const y = first.y - first.h / 2;
+        d = `M${first.x - 22},${y - 64} C${first.x - 22},${y - 36} ${first.x},${y - 20} ${first.x},${y}`;
+      }
+      enter.push(lenOf(d));
       for (let i = 1; i < p.length; i++) {
-        const a = p[i - 1], b = p[i], sg = i % 2 ? -1 : 1;
+        const a = p[i - 1], b = p[i], [c1, c2] = bend[(i - 1) % bend.length];
         if (row(a, b)) {
-          const x0 = a.x + a.w / 2, x1 = b.x - b.w / 2, g = x1 - x0, amp = sg * Math.max(32, g * .7);
-          d += ` L${x0},${a.y} C${x0 + g * .45},${a.y + amp} ${x1 - g * .45},${b.y + amp} ${x1},${b.y} L${b.x},${b.y}`;
+          const x0 = a.x + a.w / 2, x1 = b.x - b.w / 2, g = x1 - x0;
+          d += ` L${x0},${a.y}`; exit.push(lenOf(d));
+          d += ` C${x0 + g * .3},${a.y + g * c1} ${x1 - g * .4},${b.y + g * c2} ${x1},${b.y}`;
         } else if (Math.abs(a.x - b.x) < 10) {
-          const y0 = a.y + a.h / 2, y1 = b.y - b.h / 2, g = y1 - y0, amp = sg * Math.max(32, g * .7);
-          d += ` L${a.x},${y0} C${a.x + amp},${y0 + g * .45} ${b.x + amp},${y1 - g * .45} ${b.x},${y1} L${b.x},${b.y}`;
+          const y0 = a.y + a.h / 2, y1 = b.y - b.h / 2, g = y1 - y0;
+          d += ` L${a.x},${y0}`; exit.push(lenOf(d));
+          d += ` C${a.x + g * c1},${y0 + g * .3} ${b.x + g * c2},${y1 - g * .4} ${b.x},${y1}`;
         } else {
+          d += ` L${a.x},${a.y}`; exit.push(lenOf(d));
           d += ` C${a.x},${a.y + (b.y - a.y) * .6} ${b.x},${b.y - (b.y - a.y) * .6} ${b.x},${b.y}`;
         }
+        enter.push(lenOf(d));
       }
-      d += hEnd ? ` L${last.x + last.w / 2},${last.y} L${e.x},${e.y}` : ` L${last.x},${last.y + last.h / 2} L${e.x},${e.y}`;
-      $(".dash", svg).setAttribute("d", d);
-      $(".pen", svg).setAttribute("d", d);
-      ["x", "y"].forEach((a) => mask.setAttribute(a, -200));
-      mask.setAttribute("width", o.width + 400); mask.setAttribute("height", o.height + 400);
-      const h = hEnd ? [[e.x + 4, e.y], [e.x - 12, e.y - 8], [e.x - 12, e.y + 8]] : [[e.x, e.y + 4], [e.x - 8, e.y - 12], [e.x + 8, e.y - 12]];
-      const head = $(".head", svg);
-      head.setAttribute("points", h.map((q) => q.join(",")).join(" "));
+      let e;
+      if (hEnd) { const x = last.x + last.w / 2; d += ` L${x},${last.y}`; exit.push(lenOf(d)); e = { x: x + 40, y: last.y - 8 }; d += ` C${x + 16},${last.y} ${x + 24},${e.y} ${e.x},${e.y}`; }
+      else { const y = last.y + last.h / 2; d += ` L${last.x},${y}`; exit.push(lenOf(d)); e = { x: last.x + 10, y: y + 64 }; d += ` C${last.x},${y + 24} ${e.x},${y + 40} ${e.x},${e.y}`; }
+      dash.setAttribute("d", d); pen.setAttribute("d", d);
+      total = lenOf(d);
+      ["x", "y"].forEach((a) => mask.setAttribute(a, -300));
+      mask.setAttribute("width", o.width + 600); mask.setAttribute("height", o.height + 600);
+      const ang = Math.atan2(hEnd ? 0 : 1, hEnd ? 1 : 0);
+      const pt = (dx, dy) => `${e.x + dx * Math.cos(ang) - dy * Math.sin(ang)},${e.y + dx * Math.sin(ang) + dy * Math.cos(ang)}`;
+      head.setAttribute("points", [pt(6, 0), pt(-10, -7), pt(-10, 7)].join(" "));
       head.style.transformOrigin = `${e.x}px ${e.y}px`;
+      paint();
     };
-    draw();
-    new ResizeObserver(draw).observe(offer);
-    new IntersectionObserver((es, ob) => { if (es[0].isIntersecting) { offer.classList.add("is-drawn"); ob.disconnect(); } }, { threshold: .35 }).observe(offer);
+    const paint = () => {
+      // marra osoak bakarrik: marrazki bakoitza bat-batean agertzen da
+      const shown = done ? total + P : Math.floor(drawn / P) * P + (drawn % P >= DASH * .5 ? DASH + 1.5 : 0);
+      pen.style.strokeDasharray = `${shown} ${total + P}`;
+      cards.forEach((c, i) => { if (done || drawn >= enter[i] - 130) c.classList.add("on"); });
+      head.classList.toggle("on", done || drawn >= total - 2);
+    };
+    const inside = (l) => enter.some((a, i) => l >= a && l < exit[i]);
+    let t0 = 0;
+    const tick = (t) => {
+      const dt = Math.min(.05, (t - (t0 || t)) / 1000); t0 = t;
+      drawn += dt * (inside(drawn) ? 1400 : 150);
+      if (drawn >= total) { drawn = total; done = true; }
+      paint();
+      if (!done) requestAnimationFrame(tick);
+    };
+    build();
+    new ResizeObserver(build).observe(offer);
+    new IntersectionObserver((es, ob) => {
+      if (!es[0].isIntersecting || started) return;
+      started = true; ob.disconnect();
+      if (reduce) { done = true; paint(); } else requestAnimationFrame(tick);
+    }, { threshold: .35 }).observe(offer);
   });
 
   /* Cookie-oharra (egungo cookie bera: cookies_surestao) */
