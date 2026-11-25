@@ -5,6 +5,13 @@
      { embed: "https://…/preview", poster: "…" }         → kanpoko bideoa (Drive, YouTube, Vimeo)  */
 window.FOTO_BASE = "https://epalaudioamurrio.eus/img/fotos/";
 
+/* BIDEOAK orrirako bideo solteak. Bideo berri bat igotzeko:
+   1. Kopiatu .mp4 fitxategia (eta azal-irudia, .jpg) assets/bideoak/ karpetara.
+   2. Gehitu lerro bat hemen, berriena goian.  (Albumetako bideoak ere agertzen dira bideoak.html-n.) */
+window.BIDEOAK = [
+  { izena: "Bideo adibidea", video: "assets/bideoak/adibidea.mp4", poster: "assets/bideoak/adibidea.jpg", data: "2026-11-25" },
+];
+
 window.ALBUMAK = [
   { id: 5, izena: "Agurain-Salvatierra 2025", azala: "DSC_7383.JPG", elementuak: ["DSC_7383.JPG"] },
   { id: 8, izena: "Baiona 2026-06-11", azala: "IMG_20260611_WA0035.jpg", elementuak: [

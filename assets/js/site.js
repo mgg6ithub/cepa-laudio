@@ -15,6 +15,36 @@
     $$(".nav details[open]").forEach((d) => { if (!d.contains(e.target)) d.open = false; });
   });
 
+  /* Modu argia / iluna (argia lehenetsita) */
+  const html = document.documentElement, mb = $(".mode-btn");
+  const syncMode = () => {
+    const dark = html.dataset.mode === "dark";
+    mb?.setAttribute("aria-pressed", dark);
+    mb?.setAttribute("aria-label", dark ? "Modu argia" : "Modu iluna");
+  };
+  mb?.addEventListener("click", () => {
+    if (html.dataset.mode === "dark") delete html.dataset.mode; else html.dataset.mode = "dark";
+    try { localStorage.setItem("modua", html.dataset.mode || "light"); } catch (e) {}
+    syncMode();
+  });
+  syncMode();
+
+  /* Letra handiak zutabera doitu (kartel tipografia) */
+  const fit = () => $$("[data-fit]").forEach((box) => {
+    const cs = getComputedStyle(box);
+    const w = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const cap = Math.max(96, Math.min(220, innerHeight * 0.24));
+    $$(".fit", box).forEach((el) => {
+      el.style.fontSize = "100px";
+      el.style.fontSize = Math.min(cap, (100 * w) / el.offsetWidth) + "px";
+    });
+  });
+  if ($("[data-fit]")) {
+    fit();
+    document.fonts?.ready.then(fit);
+    new ResizeObserver(fit).observe(document.body);
+  }
+
   /* Cookie-oharra (egungo cookie bera: cookies_surestao) */
   const ck = $(".cookies");
   if (ck && !document.cookie.includes("cookies_surestao=")) ck.classList.add("show");
@@ -60,44 +90,45 @@
     });
   });
 
-  /* ---------- Galeria ---------- */
+  /* ---------- Galeria: argazkiak.html (albumak) eta bideoak.html ---------- */
   const root = $("#galeria");
   if (!root || !window.ALBUMAK) return;
   const BASE = window.FOTO_BASE;
   const norm = (el) => typeof el === "string"
     ? { mota: "img", src: BASE + el, thumb: BASE + el }
-    : { mota: el.video ? "video" : "embed", src: el.video || el.embed, thumb: el.poster || "", izena: el.izena || "Bideoa" };
+    : { mota: el.video ? "video" : "embed", src: el.video || el.embed, thumb: el.poster || "", izena: el.izena || "Bideoa", data: el.data || "" };
   const albums = window.ALBUMAK.map((a) => ({ ...a, items: a.elementuak.map(norm) }));
   const params = new URLSearchParams(location.search);
+  if (params.get("ikusi") === "bideoak") { location.replace("bideoak.html"); return; }
   const albumId = Number(params.get("album"));
-  const tab = params.get("ikusi");
+  const ikusi = root.dataset.ikusi;
 
   const tile = (it, i) => it.mota === "img"
     ? `<button class="tile" data-i="${i}" aria-label="Ireki argazkia ${i + 1}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"></button>`
-    : `<button class="tile video" data-i="${i}" aria-label="Ikusi bideoa: ${esc(it.izena)}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"><span class="play"><span></span></span></button>`;
-
-  const tabs = (cur) => `<nav class="tabs" aria-label="Galeria">
-    <a href="argazkiak.html" ${cur === "albumak" ? 'aria-current="page"' : ""}>Albumak</a>
-    <a href="argazkiak.html?ikusi=bideoak" ${cur === "bideoak" ? 'aria-current="page"' : ""}>Bideoak</a></nav>`;
+    : `<button class="tile video" data-i="${i}" aria-label="Ikusi bideoa: ${esc(it.izena)}"><img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async"><span class="play">Ikusi</span></button>`;
 
   let list = [];
   const album = albums.find((a) => a.id === albumId);
-  if (album) {
+  if (ikusi === "bideoak") {
+    list = [
+      ...(window.BIDEOAK || []).map(norm).map((it) => ({ ...it, album: it.data })),
+      ...albums.flatMap((a) => a.items.filter((it) => it.mota !== "img").map((it) => ({ ...it, album: a.izena }))),
+    ];
+    root.innerHTML = list.length
+      ? `<div class="video-row">${list.map((it, i) => `<article class="video-card"><div class="frame">${tile(it, i)}</div><h3>${esc(it.izena)}</h3>${it.album ? `<span class="meta">${esc(it.album)}</span>` : ""}</article>`).join("")}</div>`
+      : `<p class="empty">Oraindik ez dago bideorik.</p>`;
+  } else if (album) {
     document.title = `${album.izena} · Argazkiak · CEPA Laudio HHI`;
-    $(".page-head h1").textContent = album.izena;
-    $(".page-head p:not(.eyebrow)").textContent = `${album.items.length} elementu`;
+    $(".page-head h1").innerHTML = `<span class="fit">${esc(album.izena)}</span>`;
+    $(".page-head .lead-wrap p").textContent = `${album.items.length} elementu`;
+    fit();
     list = album.items.map((it) => ({ ...it, album: album.izena }));
-    root.innerHTML = `<a class="back" href="argazkiak.html">← Album guztiak</a><div class="masonry">${list.map(tile).join("")}</div>`;
-  } else if (tab === "bideoak") {
-    list = albums.flatMap((a) => a.items.filter((it) => it.mota !== "img").map((it) => ({ ...it, album: a.izena })));
-    root.innerHTML = tabs("bideoak") + (list.length
-      ? `<div class="video-row">${list.map((it, i) => `<article class="card video-card">${tile(it, i)}<div class="body"><h3>${esc(it.izena)}</h3><span class="muted">${esc(it.album)}</span></div></article>`).join("")}</div>`
-      : `<p class="muted">Oraindik ez dago bideorik.</p>`);
+    root.innerHTML = `<a class="back link" href="argazkiak.html">Album guztiak</a><div class="masonry">${list.map(tile).join("")}</div>`;
   } else {
-    root.innerHTML = tabs("albumak") + `<div class="albums">${albums.map((a) => {
+    root.innerHTML = `<div class="albums">${albums.map((a) => {
       const v = a.items.filter((it) => it.mota !== "img").length;
-      return `<a class="album" href="?album=${a.id}"><div class="stack">${v ? `<span class="badge">▶ ${v} bideo</span>` : ""}<img src="${BASE + a.azala}" alt="" loading="lazy" decoding="async"></div>
-        <h3>${esc(a.izena)}</h3><span class="count">${a.items.length - v} argazki</span></a>`;
+      return `<a class="album" href="?album=${a.id}"><div class="frame"><div class="stack"><img src="${BASE + a.azala}" alt="" loading="lazy" decoding="async"></div></div>
+        <h3>${esc(a.izena)}</h3><span class="count">${a.items.length - v} argazki${v ? `, ${v} bideo` : ""}</span></a>`;
     }).join("")}</div>`;
   }
   $$("img", root).forEach((img) => {
@@ -112,8 +143,8 @@
   lb.className = "lightbox";
   lb.setAttribute("aria-label", "Argazki-ikustailea");
   lb.innerHTML = `<div class="lb-top"><span class="lb-title"></span><div class="lb-actions">
-      <a class="lb-btn lb-dl" target="_blank" rel="noopener" aria-label="Jatorrizkoa ireki">⤓</a>
-      <button class="lb-btn lb-close" aria-label="Itxi">✕</button></div></div>
+      <a class="lb-btn lb-dl" target="_blank" rel="noopener" aria-label="Jatorrizkoa ireki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg></a>
+      <button class="lb-btn lb-close" aria-label="Itxi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div></div>
     <div class="lb-stage"><button class="lb-btn lb-prev" aria-label="Aurrekoa">‹</button><div class="lb-media"></div><button class="lb-btn lb-next" aria-label="Hurrengoa">›</button></div>
     <div class="lb-strip">${list.map((it, i) => `<button data-i="${i}" aria-label="${i + 1}"><img src="${esc(it.thumb)}" alt="" loading="lazy"></button>`).join("")}</div>`;
   document.body.append(lb);
