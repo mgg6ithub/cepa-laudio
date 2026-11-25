@@ -50,6 +50,7 @@
     if (cards.length < 2) return;
     offer.insertAdjacentHTML("afterbegin", `<svg class="offer-path" aria-hidden="true"><defs><mask id="pen${k}" maskUnits="userSpaceOnUse"><path class="pen"/></mask></defs><path class="dash" mask="url(#pen${k})"/><polygon class="head"/></svg>`);
     const svg = offer.firstElementChild, mask = $("mask", svg), pen = $(".pen", svg), dash = $(".dash", svg), head = $(".head", svg);
+    $$(".chips li", offer).forEach((li, n) => li.style.setProperty("--n", n));
     const probe = document.createElementNS(NS, "path");
     svg.append(probe); probe.setAttribute("fill", "none");
     // Animazioa Hezkuntza eskaintza orrian bakarrik (data-anim); bestela marra osorik, mugimendurik gabe
@@ -68,9 +69,13 @@
       const bend = [[.32, .12], [-.10, -.30], [.22, .06], [-.18, -.05]];
       enter = []; exit = [];
       let d;
-      if (hStart) {
-        const x = first.x - first.w / 2;
-        d = `M${x - 48},${first.y - 22} C${x - 28},${first.y - 22} ${x - 16},${first.y} ${x},${first.y}`;
+      // hasiera: "Gurekin zer?" izenburuaren ezkerretik jaitsi, kurban, lehen txartelean sartzeko
+      const h1 = $(".page-head h1"), x1 = first.x - first.w / 2;
+      if (h1) {
+        const r = h1.getBoundingClientRect(), sx = Math.max(x1 - 34, r.left - o.left - 30, 6 - o.left), sy = r.top - o.top + r.height / 2, dy = first.y - sy;
+        d = `M${sx},${sy} C${sx - 4},${sy + dy * .5} ${x1 - 44},${first.y - 46} ${x1},${first.y}`;
+      } else if (hStart) {
+        d = `M${x1 - 48},${first.y - 22} C${x1 - 28},${first.y - 22} ${x1 - 16},${first.y} ${x1},${first.y}`;
       } else {
         const y = first.y - first.h / 2;
         d = `M${first.x - 22},${y - 64} C${first.x - 22},${y - 36} ${first.x},${y - 20} ${first.x},${y}`;
@@ -99,17 +104,21 @@
         d += ` L${x},${y}`; exit.push(lenOf(d));
         if (tail) {
           // bukaeran bira bat gora, eta behera kurban, azpiko testura begira
-          d += ` C${x + 22},${y} ${x + 44},${y - 8} ${x + 44},${y - 36} C${x + 44},${y - 64} ${x + 8},${y - 66} ${x + 8},${y - 38} C${x + 8},${y - 10} ${x + 46},${y + 10} ${x + 40},${b + 10}`;
-          c2 = { x: x + 18, y: b + 54 }; e = { x: x + 14, y: b + 78 };
-          d += ` C${x + 36},${b + 38} ${c2.x},${c2.y} ${e.x},${e.y}`;
+          // bira handia gora, gero behera kurba zabalean, erdialdera begira
+          const cx = (p[0].x + last.x) / 2;
+          d += ` C${x + 34},${y} ${x + 74},${y - 22} ${x + 74},${y - 68} C${x + 74},${y - 118} ${x + 8},${y - 122} ${x + 10},${y - 70}`;
+          d += ` C${x + 12},${y - 20} ${x + 84},${y + 14} ${x + 74},${b + 50}`;
+          e = { x: cx + 20, y: b + 196 }; c2 = { x: e.x + 70, y: e.y - 36 };
+          d += ` C${x + 64},${b + 150} ${c2.x + 90},${e.y - 20} ${c2.x},${c2.y} Q${e.x + 34},${e.y - 44} ${e.x},${e.y}`;
+          c2 = { x: e.x + 34, y: e.y - 44 };
         } else { e = { x: x + 40, y: y - 8 }; c2 = { x: x + 24, y: e.y }; d += ` C${x + 16},${y} ${c2.x},${c2.y} ${e.x},${e.y}`; }
       } else {
         const x = last.x, y = last.y + last.h / 2;
         d += ` L${x},${y}`; exit.push(lenOf(d));
         if (tail) {
-          d += ` C${x},${y + 30} ${x + 42},${y + 42} ${x + 42},${y + 20} C${x + 42},${y} ${x + 8},${y + 4} ${x + 10},${y + 30}`;
-          c2 = { x: x + 6, y: y + 70 }; e = { x: x + 4, y: y + 94 };
-          d += ` C${x + 12},${y + 52} ${c2.x},${c2.y} ${e.x},${e.y}`;
+          d += ` C${x},${y + 44} ${x + 86},${y + 66} ${x + 86},${y + 26} C${x + 86},${y - 6} ${x + 22},${y - 2} ${x + 26},${y + 46}`;
+          c2 = { x: x + 6, y: y + 130 }; e = { x: x - 10, y: y + 168 };
+          d += ` C${x + 30},${y + 96} ${c2.x},${c2.y} ${e.x},${e.y}`;
         } else { e = { x: x + 10, y: y + 64 }; c2 = { x: e.x, y: y + 40 }; d += ` C${x},${y + 24} ${c2.x},${c2.y} ${e.x},${e.y}`; }
       }
       offer.classList.toggle("tail-h", tail && hEnd); offer.classList.toggle("tail-v", tail && !hEnd);
@@ -119,7 +128,7 @@
       mask.setAttribute("width", o.width + 600); mask.setAttribute("height", o.height + 600);
       const ang = Math.atan2(e.y - c2.y, e.x - c2.x);
       const pt = (dx, dy) => `${e.x + dx * Math.cos(ang) - dy * Math.sin(ang)},${e.y + dx * Math.sin(ang) + dy * Math.cos(ang)}`;
-      head.setAttribute("points", [pt(6, 0), pt(-10, -7), pt(-10, 7)].join(" "));
+      head.setAttribute("points", [pt(7, 0), pt(-12, -8), pt(-12, 8)].join(" "));
       head.style.transformOrigin = `${e.x}px ${e.y}px`;
       paint();
     };
@@ -134,7 +143,7 @@
     let t0 = 0;
     const tick = (t) => {
       const dt = Math.min(.05, (t - (t0 || t)) / 1000); t0 = t;
-      drawn += dt * (inside(drawn) ? 1400 : 150);
+      drawn += dt * (inside(drawn) ? 1800 : 260);
       if (drawn >= total) { drawn = total; done = true; }
       paint();
       if (!done) requestAnimationFrame(tick);

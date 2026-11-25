@@ -131,10 +131,21 @@ p { margin: 0 0 1em; text-wrap: pretty; }
 .offer-path .head { fill: var(--ink); opacity: 0; }
 .offer-path .head.on { opacity: 1; animation: head-in .3s cubic-bezier(.16, 1, .3, 1) both; }
 html.js .offer[data-anim] > .card:not(.on) { opacity: 0; }
-.offer > .card.on { animation: card-in .6s cubic-bezier(.16, 1, .3, 1) both; }
+.offer[data-anim] { perspective: 1400px; }
+.offer > .card.on { transform-origin: 50% 100%; animation: card-pop .9s cubic-bezier(.16, 1, .3, 1) both; }
+.offer > .card.on > * { animation: rise .7s cubic-bezier(.16, 1, .3, 1) both; }
+.offer > .card.on > :nth-child(2) { animation-delay: .12s; }
+.offer > .card.on > :nth-child(3) { animation-delay: .24s; }
+.offer > .card.on .chips li { animation: chip-in .55s cubic-bezier(.34, 1.56, .64, 1) both; animation-delay: calc(.4s + var(--n, 0) * .13s); }
+@keyframes card-pop {
+  0% { opacity: 0; transform: translateY(56px) rotateX(-38deg) scale(.86); box-shadow: 0 0 0 transparent; }
+  55% { opacity: 1; box-shadow: 0 34px 60px rgb(28 35 48 / .2); }
+  100% { transform: none; }
+}
+@keyframes chip-in { from { opacity: 0; transform: translateY(-26px) scale(.6); } }
 .offer.static > .card, .offer.static .head.on { animation: none; }
-.offer.tail-h { padding: 0 56px 104px 0; }
-.offer.tail-v { padding-bottom: 112px; }
+.offer.tail-h { padding: 0 92px 220px 0; }
+.offer.tail-v { padding-bottom: 190px; }
 @keyframes head-in { from { opacity: 0; transform: scale(.3); } }
 @keyframes card-in { from { opacity: 0; transform: translateY(32px) scale(.95); } }
 .offer .card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--c, var(--brand)); }
