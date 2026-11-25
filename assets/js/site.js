@@ -58,14 +58,23 @@
       const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], last);
       const s = hStart ? { x: first.x - first.w / 2 - 36, y: first.y } : { x: first.x, y: first.y - first.h / 2 - 48 };
       const e = hEnd ? { x: last.x + last.w / 2 + 40, y: last.y } : { x: last.x, y: last.y + last.h / 2 + 52 };
-      let d = `M${s.x},${s.y} L${first.x},${first.y}`;
+      // Txarteletan zuzen (ezkutuan), tarteetan arku leun bat, txandaka gora eta behera
+      let d = hStart
+        ? `M${s.x},${s.y - 40} C${s.x + 24},${s.y - 40} ${first.x - first.w / 2 - 14},${first.y} ${first.x - first.w / 2},${first.y} L${first.x},${first.y}`
+        : `M${s.x - 40},${s.y} C${s.x - 40},${s.y + 24} ${first.x},${first.y - first.h / 2 - 14} ${first.x},${first.y - first.h / 2} L${first.x},${first.y}`;
       for (let i = 1; i < p.length; i++) {
-        const a = p[i - 1], b = p[i], amp = (i % 2 ? -1 : 1) * 46;
-        d += row(a, b)
-          ? ` C${a.x + (b.x - a.x) / 2},${a.y + amp} ${a.x + (b.x - a.x) / 2},${b.y + amp} ${b.x},${b.y}`
-          : ` C${a.x},${a.y + (b.y - a.y) * .6} ${b.x},${b.y - (b.y - a.y) * .6} ${b.x},${b.y}`;
+        const a = p[i - 1], b = p[i], sg = i % 2 ? -1 : 1;
+        if (row(a, b)) {
+          const x0 = a.x + a.w / 2, x1 = b.x - b.w / 2, g = x1 - x0, amp = sg * Math.max(32, g * .7);
+          d += ` L${x0},${a.y} C${x0 + g * .45},${a.y + amp} ${x1 - g * .45},${b.y + amp} ${x1},${b.y} L${b.x},${b.y}`;
+        } else if (Math.abs(a.x - b.x) < 10) {
+          const y0 = a.y + a.h / 2, y1 = b.y - b.h / 2, g = y1 - y0, amp = sg * Math.max(32, g * .7);
+          d += ` L${a.x},${y0} C${a.x + amp},${y0 + g * .45} ${b.x + amp},${y1 - g * .45} ${b.x},${y1} L${b.x},${b.y}`;
+        } else {
+          d += ` C${a.x},${a.y + (b.y - a.y) * .6} ${b.x},${b.y - (b.y - a.y) * .6} ${b.x},${b.y}`;
+        }
       }
-      d += ` L${e.x},${e.y}`;
+      d += hEnd ? ` L${last.x + last.w / 2},${last.y} L${e.x},${e.y}` : ` L${last.x},${last.y + last.h / 2} L${e.x},${e.y}`;
       $(".dash", svg).setAttribute("d", d);
       $(".pen", svg).setAttribute("d", d);
       ["x", "y"].forEach((a) => mask.setAttribute(a, -200));
