@@ -29,6 +29,57 @@
   });
   syncMode();
 
+  /* Agertze animazioak korritzean */
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target; io.unobserve(el); el.classList.add("in");
+    setTimeout(() => { delete el.dataset.reveal; el.style.removeProperty("--d"); }, reduce ? 0 : 900 + (+el.style.getPropertyValue("--d") || 0) * 90);
+  }), { rootMargin: "0px 0px -8% 0px" });
+  $$(".section-head, .news-grid > *, .centres > *, .agenda > *, .page-head .wrap > *, .prose > *, .faq, .faq-search, .link-groups > *").forEach((el) => {
+    el.dataset.reveal = "";
+    el.style.setProperty("--d", Math.min([...el.parentElement.children].indexOf(el), 6));
+    io.observe(el);
+  });
+
+  /* "Zer ikas dezakezu": marra etena txartel batetik bestera, gezi batekin amaitua */
+  const NS = "http://www.w3.org/2000/svg";
+  $$(".offer").forEach((offer, k) => {
+    const cards = $$(":scope > .card", offer);
+    if (cards.length < 2) return;
+    cards.forEach((c, i) => c.style.setProperty("--i", i));
+    offer.insertAdjacentHTML("afterbegin", `<svg class="offer-path" aria-hidden="true"><defs><mask id="pen${k}" maskUnits="userSpaceOnUse"><path class="pen" pathLength="1"/></mask></defs><path class="dash" mask="url(#pen${k})"/><polygon class="head"/></svg>`);
+    const svg = offer.firstElementChild, mask = $("mask", svg);
+    const draw = () => {
+      const o = offer.getBoundingClientRect();
+      const p = cards.map((c) => { const r = c.getBoundingClientRect(); return { x: r.left - o.left + r.width / 2, y: r.top - o.top + r.height / 2, w: r.width, h: r.height }; });
+      const row = (a, b) => Math.abs(a.y - b.y) < 10;
+      const first = p[0], last = p[p.length - 1];
+      const hStart = row(p[0], p[1]), hEnd = row(p[p.length - 2], last);
+      const s = hStart ? { x: first.x - first.w / 2 - 36, y: first.y } : { x: first.x, y: first.y - first.h / 2 - 48 };
+      const e = hEnd ? { x: last.x + last.w / 2 + 40, y: last.y } : { x: last.x, y: last.y + last.h / 2 + 52 };
+      let d = `M${s.x},${s.y} L${first.x},${first.y}`;
+      for (let i = 1; i < p.length; i++) {
+        const a = p[i - 1], b = p[i], amp = (i % 2 ? -1 : 1) * 46;
+        d += row(a, b)
+          ? ` C${a.x + (b.x - a.x) / 2},${a.y + amp} ${a.x + (b.x - a.x) / 2},${b.y + amp} ${b.x},${b.y}`
+          : ` C${a.x},${a.y + (b.y - a.y) * .6} ${b.x},${b.y - (b.y - a.y) * .6} ${b.x},${b.y}`;
+      }
+      d += ` L${e.x},${e.y}`;
+      $(".dash", svg).setAttribute("d", d);
+      $(".pen", svg).setAttribute("d", d);
+      ["x", "y"].forEach((a) => mask.setAttribute(a, -200));
+      mask.setAttribute("width", o.width + 400); mask.setAttribute("height", o.height + 400);
+      const h = hEnd ? [[e.x + 4, e.y], [e.x - 12, e.y - 8], [e.x - 12, e.y + 8]] : [[e.x, e.y + 4], [e.x - 8, e.y - 12], [e.x + 8, e.y - 12]];
+      const head = $(".head", svg);
+      head.setAttribute("points", h.map((q) => q.join(",")).join(" "));
+      head.style.transformOrigin = `${e.x}px ${e.y}px`;
+    };
+    draw();
+    new ResizeObserver(draw).observe(offer);
+    new IntersectionObserver((es, ob) => { if (es[0].isIntersecting) { offer.classList.add("is-drawn"); ob.disconnect(); } }, { threshold: .35 }).observe(offer);
+  });
+
   /* Cookie-oharra (egungo cookie bera: cookies_surestao) */
   const ck = $(".cookies");
   if (ck && !document.cookie.includes("cookies_surestao=")) ck.classList.add("show");
